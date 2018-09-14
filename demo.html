@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type="text/javascript" src="./GifSequence/libgif/libgif.js"></script>
+  <script type="text/javascript" src="./GifSequence/libgif/rubbable.js"></script>
+  <script type="text/javascript" src="./GifSequence/GifSequence.js"></script>
+  <link href="./GifSequence/GifSequence.css" rel="stylesheet" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>
+    Example gif
+  </title>
+</head>
+<body>
+  <center>
+    <div id="sequence">
+      <img
+        src="./gifs/attr-vector-01.gif"
+        data-sequence
+        data-sequence-title="Attribute vector 1"
+        data-sequence-caption="1. Select two vectors"
+      />
+      <img
+        src="./gifs/attr-vector-03.gif"
+        data-sequence
+        data-sequence-title="Attribute vector 2"
+        data-sequence-caption="2. Click to interpolate between two points"
+      />
+      <img
+        src="./gifs/attr-vector-04.gif"
+        data-sequence
+        data-sequence-title="Attribute vector 3"
+        data-sequence-caption="3. This is the result"
+      />
+    </div>
+    <script type="text/javascript">
+      var stitched = new GifSequence({
+        sequence: document.getElementById('sequence'),
+      });
+      stitched.init();
+    </script>
+  </center>
+
+</body>
+</html>
