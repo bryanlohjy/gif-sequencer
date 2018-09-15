@@ -37,11 +37,25 @@ function GifSequence(params) {
       var sequenceContainer = document.createElement('div');
       sequenceContainer.classList.add('sequence-container');
       sequenceContainer.classList.add('loading');
+
+      sequenceContainer.style.height = params.height + 'px';
+      sequenceContainer.style.width = params.width + 'px';
+
       params.sequence.forEach(function(data, index) {
         var imgElement = data.imgElement;
         imgElement.classList.add('sequence-gif');
         imgElement.classList.add('sequence-index-' + index);
+        imgElement.addEventListener('load', function() {
+          if (imgElement.width > imgElement.height) {
+            imgElement.style.width = '100%';
+          } else {
+            imgElement.style.height = '100%';
+          }
+        });
         sequenceContainer.appendChild(imgElement);
+        if (index === params.currentSection) {
+          sequenceContainer.classList.add('active');
+        }
         self.sectionReferences.push(imgElement);
       });
       sequenceContainer.addEventListener('click', params.onSequenceDisplayClick);
@@ -299,6 +313,9 @@ function GifSequence(params) {
     this.sequenceDisplay = new SequenceDisplay({
       sequence: this.sequence,
       onSequenceDisplayClick: this.togglePlayState,
+      currentSection: this.currentSection,
+      width: this.width,
+      height: this.height,
     });
     this.selector = new Selector({
       sequence: this.sequence,
@@ -346,6 +363,15 @@ function GifSequence(params) {
         var jsGifContainer = canvas.parentNode;
         jsGifContainer.classList.add('sequence-gif');
         jsGifContainer.classList.add('sequence-index-' + data.index);
+
+        if (canvas.width > canvas.height) {
+          canvas.style.width = '100%';
+        } else {
+          canvas.style.height = '100%';
+        }
+        self.sequenceDisplay.element.style.height = self.height + 'px';
+        self.sequenceDisplay.element.style.width = self.width + 'px';
+
         if (index === self.currentSection) {
           jsGifContainer.classList.add('active');
         }
