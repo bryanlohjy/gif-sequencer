@@ -134,18 +134,38 @@ function GifSequence(params) {
     }.bind(this))();
 
     this.update = function(state) {
-      var width = Math.round((state.currentFrame / state.totalFrames) * 100) + '%';
-      if (!this.domReferences.sectionIndicators && state.sectionFrameCounts.length > 0) {
-        this.domReferences.sectionIndicators = [];
+      if (!this.domReferences.sectionAreas && state.sectionFrameCounts.length > 0) {
+        this.domReferences.sectionAreas = [];
         state.sectionFrameIndexes.forEach(function(frameCount, index) {
           var sectionIndicator = document.createElement('div');
           sectionIndicator.classList.add('progress-section-indicator');
           sectionIndicator.style.left = (frameCount / state.totalFrames) * 100 + '%';
-          this.domReferences.progressBar.appendChild(sectionIndicator);
-          this.domReferences.sectionIndicators.push(sectionIndicator);
+
+          var sectionArea = document.createElement('div');
+          sectionArea.classList.add('section-area');
+          sectionArea.style.width = (state.sectionFrameCounts[index] / state.totalFrames) * 100 + '%';
+
+          sectionArea.appendChild(sectionIndicator);
+          this.domReferences.progressBar.appendChild(sectionArea);
+
+          sectionArea.addEventListener('click', function() {
+            params.onSectionClick(index);
+          });
+          this.domReferences.sectionAreas.push(sectionArea);
         }.bind(this));
       }
-      this.domReferences.progress.style.width = width;
+      if (this.domReferences.sectionAreas) {
+        this.domReferences.sectionAreas.forEach(function(el, index) {
+          if (index === state.currentSection) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        });
+      }
+
+      var left = Math.round((state.currentFrame / state.totalFrames) * 100) + '%';
+      this.domReferences.progress.style.left = left;
     }.bind(this);
   }
   function Captions(params) {
@@ -278,6 +298,14 @@ function GifSequence(params) {
     this.playPauseButton.update(this);
   }.bind(this);
 
+  this.moveToSection = function(sectionIndex) {
+    if (this.currentSection !== sectionIndex) {
+      this.currentSection = sectionIndex;
+      this.currentFrame = this.sectionFrameIndexes[this.currentSection];
+      this.updateAll();
+    }
+  }.bind(this);
+
   this.buildElements = function() {
     this.container.classList.add('gif-sequence');
     this.container.classList.add('loading');
@@ -287,18 +315,11 @@ function GifSequence(params) {
     });
     this.selector = new Selector({
       sequence: this.sequence,
-      onSelectorClick: function(sectionIndex) {
-        if (this.superGifsAreLoaded) {
-          this.currentSection = sectionIndex;
-          this.currentFrame = this.sectionFrameIndexes[this.currentSection];
-          this.updateAll();
-        } else {
-          return;
-        }
-      }.bind(this),
+      onSelectorClick: this.moveToSection,
     });
     this.progressBar = new ProgressBar({
       sequence: this.sequence,
+      onSectionClick: this.moveToSection,
     });
     this.captions = new Captions({
       sequence: this.sequence,

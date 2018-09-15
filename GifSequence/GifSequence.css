@@ -85,15 +85,36 @@
       height: 10px;
       position: relative;
     }
-      .gif-sequence .progress-bar .progress-section-indicator {
-        background: cornflowerblue;
-        position: absolute;
-        width: 5px;
-        height: 100%;
-      }
+
       .gif-sequence .progress-bar .progress {
-        background: lightblue;
         height: 100%;
+        float: left;
+        position: absolute;
+      }
+
+      .gif-sequence .progress-bar .section-area {
+        height: 100%;
+        float: left;
+        cursor: pointer;
+      }
+      .gif-sequence .progress-bar .section-area:hover {
+        background: rgba(20, 150, 220, 0.2);
+      }
+        .gif-sequence .progress-bar .section-area.active {
+          background: rgba(20, 150, 220, 0.7);
+        }
+
+        .gif-sequence .progress-bar .progress-section-indicator {
+          background: rgba(20, 150, 220, 1);
+          position: absolute;
+          width: 2px;
+          height: 100%;
+        }
+      .gif-sequence .progress-bar .progress {
+        background:  white;
+        width: 2px;
+        height: 10px;
+        margin-right: 1px;
         float: left;
         transition: width 0.2s;
       }
