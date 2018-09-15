@@ -730,11 +730,11 @@
                     stepping = playing;
                     if (!stepping) return;
                     // <<<<< gifStitch.js mod
-                    if (options.onStep) {
-                      options.onStep();
+                    stepFrame(1);
+                    if (options.on_step) {
+                      options.on_step();
                     }
                     // >>>>>>>
-                    stepFrame(1);
                     var delay = frames[i].delay * 10;
                     if (!delay) delay = 100; // FIXME: Should this even default at all? What should it be?
 

@@ -14,7 +14,7 @@
 <body>
   <center>
     <div id="sequence">
-      <img
+      <!-- <img
         src="./gifs/attr-vector-01.gif"
         data-sequence
         data-sequence-title="Attribute vector 1"
@@ -31,11 +31,49 @@
         data-sequence
         data-sequence-title="Attribute vector 3"
         data-sequence-caption="3. This is the result"
+      /> -->
+      <img
+        src="./demo-gifs/dog1.gif"
+        data-sequence
+        data-sequence-title="Dog NUMBER 1"
+        data-sequence-caption="Dog NUMBER 1"
       />
+      <img
+        src="./demo-gifs/dog2.gif"
+        data-sequence
+        data-sequence-title="Dog NUMBER 2"
+        data-sequence-caption="Dog NUMBER 2"
+      />
+      <!-- <img
+        src="./demo-gifs/dog3.gif"
+        data-sequence
+        data-sequence-title="Dog NUMBER 3"
+        data-sequence-caption="Dog NUMBER 3"
+      />
+      <img
+        src="./demo-gifs/dog4.gif"
+        data-sequence
+        data-sequence-title="Dog NUMBER 4"
+        data-sequence-caption="Dog NUMBER 4"
+      />
+      <img
+        src="./demo-gifs/dog5.gif"
+        data-sequence
+        data-sequence-title="Dog NUMBER 5"
+        data-sequence-caption="Dog NUMBER 5"
+      />
+      <img
+        src="./demo-gifs/dog6.gif"
+        data-sequence
+        data-sequence-title="Dog NUMBER 6"
+        data-sequence-caption="Dog NUMBER 6"
+      /> -->
+
     </div>
     <script type="text/javascript">
       var stitched = new GifSequence({
         sequence: document.getElementById('sequence'),
+        autoPlay: true,
       });
       stitched.init();
     </script>

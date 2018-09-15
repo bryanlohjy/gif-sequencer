@@ -4,6 +4,10 @@
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
 }
+.gif-sequence.loading {
+  pointer-events: none;
+}
+
   .gif-sequence .left-section {
     z-index: 1;
     display: flex;
@@ -17,9 +21,12 @@
       padding: 0;
     }
       .gif-sequence .selector-container .sequence-selector {
-        cursor: pointer;
         white-space: pre;
       }
+      .gif-sequence:not(.loading) .selector-container .sequence-selector {
+        cursor: pointer;
+      }
+
       .gif-sequence .selector-container .sequence-selector.active {
         font-weight: bold;
       }
@@ -29,14 +36,27 @@
         .gif-sequence .sequence-container.loading .jsgif:not(:first-child) {
           display: none;
         }
-      .gif-sequence .sequence-container .sequence-gif,
-      .gif-sequence .caption-container .sequence-caption {
-        display: none;
+      .gif-sequence .sequence-container {
+        background: black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
       }
-      .gif-sequence .sequence-container .sequence-gif.active,
-      .gif-sequence .caption-container .sequence-caption.active {
-        display: block;
-      }
+        .gif-sequence .sequence-container .sequence-gif canvas {
+          max-width: 100%;
+          max-height: 100%;
+        }
+        .gif-sequence .sequence-container .sequence-gif,
+        .gif-sequence .caption-container .sequence-caption {
+          display: none;
+        }
+        .gif-sequence .sequence-container .sequence-gif.active,
+        .gif-sequence .caption-container .sequence-caption.active {
+          display: block;
+        }
+
 
   .gif-sequence .right-section {
     z-index: 1;
@@ -44,11 +64,36 @@
     flex-direction: column;
     border-left: 1px solid grey;
   }
+    .gif-sequence .right-section .caption-and-button-container {
+      display: flex;
+      flex-direction: row;
+    }
+      .gif-sequence .right-section .caption-and-button-container .play-pause-button {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+
     .gif-sequence .caption-container {
+      padding: 12px;
     }
 
    .gif-sequence .progress-bar {
-      background: cornflowerblue;
+      background: rgb(40, 40, 40);
+      display: inline-block;
       width: 100%;
-      height: 20px;
+      height: 10px;
+      position: relative;
     }
+      .gif-sequence .progress-bar .progress-section-indicator {
+        background: cornflowerblue;
+        position: absolute;
+        width: 5px;
+        height: 100%;
+      }
+      .gif-sequence .progress-bar .progress {
+        background: lightblue;
+        height: 100%;
+        float: left;
+        transition: width 0.2s;
+      }
