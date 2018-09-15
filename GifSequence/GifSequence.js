@@ -33,6 +33,9 @@ function GifSequence(params) {
     this.superGifs = [];
 
     var self = this;
+
+    var viewPortAspectRatio = params.width / params.height;
+
     this.element = (function() {
       var sequenceContainer = document.createElement('div');
       sequenceContainer.classList.add('sequence-container');
@@ -45,13 +48,6 @@ function GifSequence(params) {
         var imgElement = data.imgElement;
         imgElement.classList.add('sequence-gif');
         imgElement.classList.add('sequence-index-' + index);
-        imgElement.addEventListener('load', function() {
-          if (imgElement.width > imgElement.height) {
-            imgElement.style.width = '100%';
-          } else {
-            imgElement.style.height = '100%';
-          }
-        });
         sequenceContainer.appendChild(imgElement);
         if (index === params.currentSection) {
           sequenceContainer.classList.add('active');
@@ -66,12 +62,6 @@ function GifSequence(params) {
       this.element.classList.remove('loading');
       this.sectionReferences = state.sequence.map(function(data) {
         self.superGifs.push(data.superGif);
-        var canvas = data.superGif.get_canvas();
-        if (canvas.width > canvas.height) {
-          canvas.style.width = '100%';
-        } else {
-          canvas.style.height = '100%';
-        }
         return data.imgElement;
       });
       this.element.style.height = state.height + 'px';
@@ -356,6 +346,7 @@ function GifSequence(params) {
   this.loadSuperGifs = function(onSuperGifsLoaded) {
     var loadedSuperGifs = 0;
     var self = this;
+    var viewPortAspectRatio = this.width / this.height;
 
     this.sequence.forEach(function(data, index) {
       data.superGif.load(function() {
@@ -364,11 +355,13 @@ function GifSequence(params) {
         jsGifContainer.classList.add('sequence-gif');
         jsGifContainer.classList.add('sequence-index-' + data.index);
 
-        if (canvas.width > canvas.height) {
+        var canvasAspectRatio = canvas.width / canvas.height;
+        if (canvasAspectRatio > viewPortAspectRatio) {
           canvas.style.width = '100%';
         } else {
           canvas.style.height = '100%';
         }
+
         self.sequenceDisplay.element.style.height = self.height + 'px';
         self.sequenceDisplay.element.style.width = self.width + 'px';
 
