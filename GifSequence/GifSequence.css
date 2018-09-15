@@ -54,7 +54,10 @@
         }
         .gif-sequence .sequence-container .sequence-gif.active,
         .gif-sequence .caption-container .sequence-caption.active {
-          display: block;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          flex-direction: column;
         }
 
 
