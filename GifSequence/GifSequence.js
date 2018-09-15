@@ -48,11 +48,9 @@ function GifSequence(params) {
       return sequenceContainer;
     })();
 
-    this.updateWithJSGifContainers = function(sequence) {
+    this.updateWithJSGifContainers = function(state) {
       this.element.classList.remove('loading');
-      var maxWidth;
-      var maxHeight;
-      this.sectionReferences = sequence.map(function(data) {
+      this.sectionReferences = state.sequence.map(function(data) {
         self.superGifs.push(data.superGif);
         var canvas = data.superGif.get_canvas();
         if (canvas.width > canvas.height) {
@@ -60,23 +58,10 @@ function GifSequence(params) {
         } else {
           canvas.style.height = '100%';
         }
-
-        if (!maxWidth) {
-          maxWidth = canvas.width;
-        }
-        if (!maxHeight) {
-          maxHeight = canvas.height;
-        }
-        if (canvas.width > maxWidth) {
-          maxWidth = canvas.width;
-        }
-        if (canvas.height > maxHeight) {
-          maxHeight = canvas.height;
-        }
         return data.imgElement;
       });
-      this.element.style.height = maxHeight + 'px';
-      this.element.style.width = maxWidth + 'px';
+      this.element.style.height = state.height + 'px';
+      this.element.style.width = state.width + 'px';
     }
 
     this.update = function(parent) {
@@ -235,6 +220,8 @@ function GifSequence(params) {
   this.sectionFrameIndexes = [];
   this.superGifsAreLoaded = false;
   this.isPlaying = params.hasOwnProperty('autoPlay') ? params.autoPlay : true;
+  this.height = params.hasOwnProperty('height') ? params.height : 500;
+  this.width = params.hasOwnProperty('width') ? params.width : 500;
 
   this.updateAll = function() {
     if (this.superGifsAreLoaded) {
@@ -389,7 +376,7 @@ function GifSequence(params) {
         this.container.classList.remove('loading');
         this.superGifsAreLoaded = true;
         this.countFrames(this.sequence);
-        this.sequenceDisplay.updateWithJSGifContainers(this.sequence);
+        this.sequenceDisplay.updateWithJSGifContainers(this);
         this.updateAll();
       }.bind(this), 0)
     }.bind(this));
