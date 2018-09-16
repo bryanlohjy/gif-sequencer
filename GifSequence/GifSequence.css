@@ -1,13 +1,25 @@
+/* Functionality Styles */
 .gif-sequence {
   display: inline-flex;
   flex-direction: row;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
 }
 .gif-sequence.full-width {
   width: 100%;
   flex-direction: column;
 }
+
+
+/* Design Styles */
+.gif-sequence {
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+
+
+
+
+
 
 .gif-sequence.loading {
   pointer-events: none;
@@ -55,11 +67,11 @@
           max-height: 100%;
         }
         .gif-sequence .sequence-container .sequence-gif,
-        .gif-sequence .caption-container .sequence-caption {
+        .gif-sequence .caption-container .sequence-caption-container {
           display: none;
         }
         .gif-sequence .sequence-container .sequence-gif.active,
-        .gif-sequence .caption-container .sequence-caption.active {
+        .gif-sequence .caption-container .sequence-caption-container.active {
           display: flex;
           align-items: center;
           justify-content: center;

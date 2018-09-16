@@ -170,12 +170,24 @@ function GifSequence(params) {
       var captionContainer = document.createElement('div');
       captionContainer.classList.add('caption-container');
       params.sequence.forEach(function(data, index) {
+        var captionElementContainer = document.createElement('div');
+        captionElementContainer.classList.add('sequence-caption-container');
+        captionElementContainer.classList.add('sequence-index-' + index);
+
+        var captionTitleElement = document.createElement('span');
+        captionTitleElement.classList.add('sequence-caption-title');
+        captionTitleElement.appendChild(document.createTextNode(data.selectorTitle));
+
         var captionElement = document.createElement('span');
         captionElement.classList.add('sequence-caption');
-        captionElement.classList.add('sequence-index-' + index);
         captionElement.appendChild(document.createTextNode(data.caption));
-        captionContainer.appendChild(captionElement);
-        self.sectionReferences.push(captionElement);
+
+        captionElementContainer.appendChild(captionTitleElement);
+        captionElementContainer.appendChild(captionElement);
+
+        captionContainer.appendChild(captionElementContainer);
+
+        self.sectionReferences.push(captionElementContainer);
       });
       return captionContainer;
     })();
