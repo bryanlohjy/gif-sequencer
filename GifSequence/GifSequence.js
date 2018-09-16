@@ -27,6 +27,17 @@ function GifSequence(params) {
       data.caption = el.attributes.hasOwnProperty('data-sequence-caption') ? el.getAttribute('data-sequence-caption') : "Caption for sequence " + index;
       return data;
     },
+    fitCanvasImgWithin: function(canvasOrImgElement, container) {
+      var canvasImgAspectRatio = canvasOrImgElement.width / canvasOrImgElement.height;
+      var containerAspectRatio = container.clientWidth / container.clientHeight;
+      if (canvasImgAspectRatio > containerAspectRatio) {
+        canvasOrImgElement.style.width = '100%';
+        canvasOrImgElement.style.height = '';
+      } else {
+        canvasOrImgElement.style.height = '100%';
+        canvasOrImgElement.style.width = '';
+      }
+    }
   };
   function SequenceDisplay(params) {
     this.sectionReferences = [];
@@ -34,21 +45,16 @@ function GifSequence(params) {
 
     var self = this;
 
-    var viewPortAspectRatio = params.width / params.height;
-
     this.element = (function() {
       var sequenceContainer = document.createElement('div');
       sequenceContainer.classList.add('sequence-container');
       sequenceContainer.classList.add('loading');
-
-      sequenceContainer.style.height = params.height + 'px';
-      sequenceContainer.style.width = params.width + 'px';
-
       params.sequence.forEach(function(data, index) {
         var imgElement = data.imgElement;
         imgElement.classList.add('sequence-gif');
         imgElement.classList.add('sequence-index-' + index);
         sequenceContainer.appendChild(imgElement);
+
         if (index === params.currentSection) {
           sequenceContainer.classList.add('active');
         }
@@ -214,7 +220,6 @@ function GifSequence(params) {
     }.bind(this);
   }
 
-
   this.container = params.sequence;
   this.sequence = [];
   this.currentSection = 0;
@@ -346,7 +351,6 @@ function GifSequence(params) {
   this.loadSuperGifs = function(onSuperGifsLoaded) {
     var loadedSuperGifs = 0;
     var self = this;
-    var viewPortAspectRatio = this.width / this.height;
 
     this.sequence.forEach(function(data, index) {
       data.superGif.load(function() {
@@ -355,15 +359,7 @@ function GifSequence(params) {
         jsGifContainer.classList.add('sequence-gif');
         jsGifContainer.classList.add('sequence-index-' + data.index);
 
-        var canvasAspectRatio = canvas.width / canvas.height;
-        if (canvasAspectRatio > viewPortAspectRatio) {
-          canvas.style.width = '100%';
-        } else {
-          canvas.style.height = '100%';
-        }
-
-        self.sequenceDisplay.element.style.height = self.height + 'px';
-        self.sequenceDisplay.element.style.width = self.width + 'px';
+        utils.fitCanvasImgWithin(canvas, self.sequenceDisplay.element);
 
         if (index === self.currentSection) {
           jsGifContainer.classList.add('active');
@@ -386,10 +382,38 @@ function GifSequence(params) {
     }.bind(this));
   }
 
+  this.sizeGifs = function() {
+    this.sequence.forEach(function(item, index) {
+      var canvas = item.superGif.get_canvas();
+      if (canvas) {
+        utils.fitCanvasImgWithin(canvas, this.sequenceDisplay.element);
+      }
+    }.bind(this));
+  }.bind(this);
+
+  this.updateResponsiveStyles = function() {
+    this.sizeGifs();
+    if (document.body.clientWidth <= this.baseContainerWidth) {
+      this.container.classList.add('full-width');
+      this.sequenceDisplay.element.style.width = '100%';
+    } else {
+      this.container.classList.remove('full-width');
+      this.sequenceDisplay.element.style.width = this.width + 'px';
+      this.sequenceDisplay.element.style.height = this.height + 'px';
+    }
+    this.sizeGifs();
+  }.bind(this);
+
   this.init = function() {
     this.parseDOMElements();
     this.buildElements();
     this.updateAll();
+
+    // Update sizes twice to resize gifs and grab their rendered dimensions
+    this.updateResponsiveStyles();
+    this.baseContainerWidth = this.container.clientWidth;
+    this.updateResponsiveStyles();
+
     this.loadSuperGifs(function() {
       setTimeout(function() { // for testing
         this.container.classList.remove('loading');
@@ -397,7 +421,10 @@ function GifSequence(params) {
         this.countFrames(this.sequence);
         this.sequenceDisplay.updateWithJSGifContainers(this);
         this.updateAll();
-      }.bind(this), 0)
+        this.updateResponsiveStyles();
+      }.bind(this), 10000)
     }.bind(this));
+
+    window.addEventListener('resize', this.updateResponsiveStyles);
   }
 }
